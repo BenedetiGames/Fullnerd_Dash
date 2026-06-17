@@ -3,539 +3,630 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NerdStudio — Roteiros & Imagens</title>
+<title>FullNerd Studio</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap');
 :root {
-  --bg: #080810;
-  --surface: #0e0e1a;
-  --card: #13131f;
-  --card2: #181828;
-  --border: #1f1f35;
-  --border2: #2a2a45;
-  --accent: #8b5cf6;
-  --accent-glow: rgba(139,92,246,0.25);
-  --gold: #f59e0b;
-  --gold-dim: rgba(245,158,11,0.15);
-  --cyan: #22d3ee;
-  --green: #10b981;
-  --red: #f43f5e;
-  --text: #e2e8f0;
-  --muted: #64748b;
-  --muted2: #94a3b8;
+  --bg:#07070f; --s1:#0e0e1c; --s2:#121220; --card:#17172a;
+  --b1:#1e1e35; --b2:#2b2b4a;
+  --pu:#8b5cf6; --pu2:#6d28d9; --pg:rgba(139,92,246,.2);
+  --go:#f59e0b; --gg:rgba(245,158,11,.15);
+  --gr:#10b981; --re:#f43f5e;
+  --tx:#e2e8f0; --m1:#94a3b8; --m2:#64748b;
 }
+* { margin:0; padding:0; box-sizing:border-box }
+body { background:var(--bg); color:var(--tx); font-family:'Inter',sans-serif; min-height:100vh }
 
-* { margin:0; padding:0; box-sizing:border-box; }
-body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; min-height:100vh; overflow-x:hidden; }
+/* SIDEBAR */
+#sb { position:fixed; top:0; left:0; width:220px; height:100vh; background:var(--s1); border-right:1px solid var(--b1); display:flex; flex-direction:column; z-index:300; transition:transform .3s }
+.sbl { padding:22px 20px 18px; font-family:'Cinzel',serif; font-size:16px; font-weight:900; letter-spacing:2px; background:linear-gradient(90deg,#8b5cf6,#f59e0b); -webkit-background-clip:text; -webkit-text-fill-color:transparent; border-bottom:1px solid var(--b1) }
+.sbl small { display:block; font-family:'Inter',sans-serif; font-size:10px; -webkit-text-fill-color:var(--m2); letter-spacing:.5px; margin-top:2px; font-weight:500 }
+.sbn { padding:16px 10px; flex:1; overflow-y:auto }
+.sbs { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--m2); padding:0 10px; margin:14px 0 6px }
+.sbi { display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:8px; font-size:13px; color:var(--m1); cursor:pointer; border:none; background:none; font-family:'Inter',sans-serif; width:100%; transition:all .18s; text-align:left }
+.sbi:hover { background:var(--card); color:var(--tx) }
+.sbi.on { background:var(--pg); color:var(--tx); border:1px solid rgba(139,92,246,.3) }
+.sbf { padding:14px; border-top:1px solid var(--b1) }
+#genBtn { width:100%; padding:11px; background:linear-gradient(135deg,var(--pu),var(--pu2)); color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:8px }
+#genBtn:hover { box-shadow:0 0 24px rgba(139,92,246,.5); transform:translateY(-1px) }
+#genBtn:disabled { opacity:.4; cursor:not-allowed; transform:none }
 
-/* ── HEADER ── */
-header {
-  background: linear-gradient(180deg, #0d0b1e 0%, #080810 100%);
-  border-bottom: 1px solid var(--border);
-  padding: 0 28px;
-  height: 60px;
-  display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top:0; z-index:200;
-}
-.logo {
-  font-family:'Cinzel',serif;
-  font-size:20px; font-weight:900;
-  letter-spacing:3px;
-  background: linear-gradient(90deg, #8b5cf6, #f59e0b);
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-}
-.header-right { display:flex; gap:10px; align-items:center; }
-.date-pill {
-  background:var(--card); border:1px solid var(--border);
-  padding:5px 13px; border-radius:20px; font-size:12px; color:var(--muted);
-}
-#mainBtn {
-  background: linear-gradient(135deg, #7c3aed, #5b21b6);
-  color:#fff; border:none; padding:8px 20px; border-radius:8px;
-  font-size:13px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif;
-  transition:all 0.2s; letter-spacing:0.3px;
-}
-#mainBtn:hover { box-shadow:0 0 20px rgba(124,58,237,0.5); transform:translateY(-1px); }
-#mainBtn:disabled { opacity:0.4; transform:none; cursor:not-allowed; }
+/* MAIN */
+#mn { margin-left:220px; min-height:100vh; display:flex; flex-direction:column }
+#tb { background:var(--s1); border-bottom:1px solid var(--b1); padding:0 28px; height:54px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100 }
+.pt { font-size:15px; font-weight:700 }
+.tr { display:flex; align-items:center; gap:10px }
+.dpill { background:var(--card); border:1px solid var(--b1); padding:4px 12px; border-radius:20px; font-size:11px; color:var(--m2) }
+.spill { background:rgba(16,185,129,.1); border:1px solid rgba(16,185,129,.25); color:#6ee7b7; padding:4px 12px; border-radius:20px; font-size:11px; font-weight:600 }
+#ct { padding:24px 28px; flex:1 }
 
-/* ── CATEGORY FILTERS ── */
-.cat-bar {
-  background:var(--surface); border-bottom:1px solid var(--border);
-  padding:12px 28px; display:flex; gap:8px; flex-wrap:wrap;
-}
-.cat-btn {
-  background:var(--card); border:1px solid var(--border);
-  color:var(--muted); padding:6px 15px; border-radius:20px; font-size:13px;
-  cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.18s;
-  display:flex; align-items:center; gap:6px;
-}
-.cat-btn:hover, .cat-btn.on { border-color:var(--accent); color:var(--text); background:rgba(139,92,246,0.12); }
+/* CATEGORY PILLS */
+.cr { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:22px }
+.catbtn { background:var(--card); border:1px solid var(--b1); color:var(--m2); padding:6px 14px; border-radius:20px; font-size:12px; cursor:pointer; font-family:'Inter',sans-serif; transition:all .18s }
+.catbtn:hover, .catbtn.on { border-color:var(--pu); color:var(--tx); background:var(--pg) }
 
-/* ── LOADING ── */
-#loading { display:none; text-align:center; padding:100px 20px; }
-.spin { width:44px; height:44px; border:2px solid var(--border2); border-top-color:var(--accent);
-  border-radius:50%; animation:spin 0.7s linear infinite; margin:0 auto 18px; }
-@keyframes spin { to { transform:rotate(360deg); } }
-.load-label { font-size:15px; color:var(--muted2); }
-.load-step { font-size:12px; color:var(--muted); margin-top:6px; font-family:'JetBrains Mono',monospace; }
+/* LOADING */
+#ld { display:none; text-align:center; padding:80px 20px }
+.spin { width:42px; height:42px; border:2px solid var(--b2); border-top-color:var(--pu); border-radius:50%; animation:spin .7s linear infinite; margin:0 auto 16px }
+@keyframes spin { to { transform:rotate(360deg) } }
 
-/* ── EMPTY ── */
-#empty { text-align:center; padding:100px 20px; }
-.empty-ico { font-size:56px; margin-bottom:16px; }
-.empty-t { font-size:18px; font-weight:700; margin-bottom:8px; }
-.empty-s { font-size:13px; color:var(--muted); line-height:1.6; }
+/* GRID */
+#gd { display:grid; grid-template-columns:repeat(auto-fill,minmax(400px,1fr)); gap:18px }
 
-/* ── MAIN GRID ── */
-main { padding:24px 28px; }
-#grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(380px,1fr)); gap:20px; }
+/* CARD */
+.vc { background:var(--card); border:1px solid var(--b1); border-radius:14px; overflow:hidden; animation:rise .35s ease forwards; opacity:0; transition:border-color .2s,box-shadow .2s }
+.vc:hover { border-color:var(--pu); box-shadow:0 0 28px var(--pg) }
+@keyframes rise { from { opacity:0; transform:translateY(12px) } to { opacity:1; transform:translateY(0) } }
+.vs { height:4px }
+.vt { padding:14px 16px 0; display:flex; gap:10px; align-items:flex-start }
+.vn { font-family:'Cinzel',serif; font-size:26px; font-weight:900; color:var(--b2); flex-shrink:0; line-height:1; margin-top:4px }
+.vi { flex:1 }
+.vtg { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:7px; align-items:center }
+.tg { font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; text-transform:uppercase; letter-spacing:.5px }
+.tg-pokemon { background:rgba(251,191,36,.15); color:#fbbf24; border:1px solid rgba(251,191,36,.3) }
+.tg-harrypotter { background:rgba(139,92,246,.2); color:#c4b5fd; border:1px solid rgba(139,92,246,.35) }
+.tg-got { background:rgba(244,63,94,.15); color:#fda4af; border:1px solid rgba(244,63,94,.3) }
+.tg-games { background:rgba(34,211,238,.12); color:#67e8f9; border:1px solid rgba(34,211,238,.28) }
+.tg-anime { background:rgba(239,68,68,.14); color:#fca5a5; border:1px solid rgba(239,68,68,.28) }
+.tg-marvel { background:rgba(239,68,68,.18); color:#fca5a5; border:1px solid rgba(239,68,68,.32) }
+.tg-dc { background:rgba(59,130,246,.15); color:#93c5fd; border:1px solid rgba(59,130,246,.28) }
+.tg-series { background:rgba(168,85,247,.15); color:#d8b4fe; border:1px solid rgba(168,85,247,.28) }
+.vbg { font-size:10px; font-weight:700; padding:2px 8px; border-radius:6px; background:rgba(245,158,11,.12); color:var(--go); border:1px solid rgba(245,158,11,.28) }
+.vsafe { font-size:10px; font-weight:700; padding:2px 8px; border-radius:6px; background:rgba(16,185,129,.1); color:#6ee7b7; border:1px solid rgba(16,185,129,.25) }
+.vtt { font-size:14px; font-weight:700; line-height:1.45; color:var(--tx) }
 
-/* ── VIDEO CARD ── */
-.vcard {
-  background:var(--card); border:1px solid var(--border);
-  border-radius:14px; overflow:hidden;
-  transition:border-color 0.2s, box-shadow 0.2s;
-  animation:rise 0.4s ease forwards; opacity:0;
-}
-@keyframes rise { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
-.vcard:hover { border-color:var(--accent); box-shadow:0 0 28px var(--accent-glow); }
+/* TABS */
+.tabs { display:flex; border-bottom:1px solid var(--b1); margin-top:12px }
+.tab { flex:1; padding:9px 0; font-size:11px; font-weight:700; color:var(--m2); background:none; border:none; cursor:pointer; font-family:'Inter',sans-serif; border-bottom:2px solid transparent; margin-bottom:-1px; transition:all .18s }
+.tab.on { color:var(--tx); border-bottom-color:var(--pu) }
+.pan { display:none; padding:14px 16px }
+.pan.on { display:block }
 
-/* card top banner */
-.card-banner {
-  height: 8px;
-  width: 100%;
-}
+/* SCENES */
+.sc { background:var(--s2); border:1px solid var(--b1); border-radius:10px; padding:13px 14px; margin-bottom:10px }
+.sh { display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap }
+.sname { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.8px; color:var(--pu) }
+.stime { font-size:10px; color:var(--m2); font-family:'JetBrains Mono',monospace }
+.sbadge { font-size:10px; background:rgba(16,185,129,.1); color:#6ee7b7; border:1px solid rgba(16,185,129,.22); padding:1px 6px; border-radius:4px }
+.stx { font-size:13px; line-height:1.8; color:var(--m1) }
+.simtip { margin-top:10px; padding:9px 11px; background:var(--gg); border:1px solid rgba(245,158,11,.22); border-radius:8px }
+.sitl { font-size:10px; font-weight:700; color:var(--go); text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px }
+.sitd { font-size:12px; color:#fcd34d; line-height:1.5 }
+.sits { font-size:11px; color:var(--gr); margin-top:5px }
+.cbtn { width:100%; padding:10px; margin-top:6px; background:rgba(139,92,246,.1); border:1px solid rgba(139,92,246,.28); color:#c4b5fd; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; transition:all .18s }
+.cbtn:hover { background:rgba(139,92,246,.2) }
+.cbtn.ok { border-color:var(--gr); color:var(--gr) }
 
-/* card header */
-.card-head { padding:16px 18px 0; display:flex; gap:12px; align-items:flex-start; }
-.card-num {
-  font-family:'Cinzel',serif; font-size:24px; font-weight:900;
-  color:var(--border2); flex-shrink:0; line-height:1;
-  margin-top:2px;
-}
-.card-meta { flex:1; }
-.card-tags { display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap; }
-.tag {
-  font-size:10px; font-weight:700; padding:2px 9px; border-radius:20px;
-  text-transform:uppercase; letter-spacing:0.6px;
-}
-.tag-pokemon  { background:rgba(251,191,36,0.18); color:#fbbf24; border:1px solid rgba(251,191,36,0.3); }
-.tag-harrypotter { background:rgba(139,92,246,0.2); color:#c4b5fd; border:1px solid rgba(139,92,246,0.35); }
-.tag-got      { background:rgba(244,63,94,0.18); color:#fda4af; border:1px solid rgba(244,63,94,0.3); }
-.tag-games    { background:rgba(34,211,238,0.15); color:#67e8f9; border:1px solid rgba(34,211,238,0.3); }
-.tag-anime    { background:rgba(239,68,68,0.15); color:#fca5a5; border:1px solid rgba(239,68,68,0.3); }
-.tag-marvel   { background:rgba(239,68,68,0.2); color:#fca5a5; border:1px solid rgba(239,68,68,0.35); }
-.tag-dc       { background:rgba(59,130,246,0.18); color:#93c5fd; border:1px solid rgba(59,130,246,0.3); }
-.tag-tech     { background:rgba(16,185,129,0.15); color:#6ee7b7; border:1px solid rgba(16,185,129,0.3); }
-.tag-series   { background:rgba(168,85,247,0.15); color:#d8b4fe; border:1px solid rgba(168,85,247,0.3); }
+/* IMG ITEMS */
+.ii { background:var(--s2); border:1px solid var(--b1); border-radius:9px; padding:11px 13px; display:flex; gap:10px; align-items:flex-start; margin-bottom:8px }
+.inum { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:var(--m2); background:var(--b2); padding:2px 7px; border-radius:4px; white-space:nowrap; flex-shrink:0; margin-top:2px }
+.ibody { flex:1 }
+.idesc { font-size:12px; color:var(--m1); margin-bottom:4px; line-height:1.5 }
+.isrc { font-size:11px; color:var(--gr); margin-bottom:7px }
+.ibrow { display:flex; gap:5px; flex-wrap:wrap }
+.ib { font-size:11px; padding:4px 10px; border-radius:6px; border:none; font-family:'Inter',sans-serif; font-weight:700; text-decoration:none; display:inline-block; transition:all .15s; cursor:pointer }
+.ib:hover { filter:brightness(1.3); transform:translateY(-1px) }
+.ibu { background:rgba(139,92,246,.1); color:#c4b5fd; border:1px solid rgba(139,92,246,.28) }
+.ibp { background:rgba(34,211,238,.1); color:#67e8f9; border:1px solid rgba(34,211,238,.28) }
+.ibw { background:rgba(16,185,129,.1); color:#6ee7b7; border:1px solid rgba(16,185,129,.28) }
+.ibm { background:rgba(245,158,11,.1); color:#fcd34d; border:1px solid rgba(245,158,11,.28) }
 
-.viral-badge {
-  font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;
-  background:rgba(245,158,11,0.15); color:var(--gold); border:1px solid rgba(245,158,11,0.3);
-}
-.card-title { font-size:15px; font-weight:700; line-height:1.45; color:var(--text); }
+/* TOOLS GRID */
+.tg2 { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:18px }
+.tc { background:var(--card); border:1px solid var(--b1); border-radius:14px; padding:20px }
+.th { display:flex; gap:12px; align-items:center; margin-bottom:14px }
+.tt2 { font-size:15px; font-weight:700 }
+.ts2 { font-size:12px; color:var(--m2); margin-top:2px }
+.pb { background:var(--s2); border:1px solid var(--b1); border-radius:9px; padding:13px; font-size:12px; line-height:1.7; color:var(--m1); font-family:'JetBrains Mono',monospace; white-space:pre-wrap; word-break:break-word; margin-bottom:10px; max-height:180px; overflow-y:auto }
+.pb::-webkit-scrollbar { width:4px }
+.pb::-webkit-scrollbar-thumb { background:var(--b2); border-radius:4px }
+.tcopy { width:100%; padding:9px; background:rgba(245,158,11,.1); border:1px solid rgba(245,158,11,.28); color:#fcd34d; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; transition:all .18s }
+.tcopy:hover { background:rgba(245,158,11,.2) }
+.tcopy.ok { border-color:var(--gr); color:var(--gr) }
 
-/* ── TABS ── */
-.card-tabs {
-  display:flex; border-bottom:1px solid var(--border); margin-top:14px;
-}
-.tab-btn {
-  flex:1; padding:9px 0; font-size:12px; font-weight:600; color:var(--muted);
-  background:none; border:none; cursor:pointer; font-family:'Inter',sans-serif;
-  border-bottom:2px solid transparent; margin-bottom:-1px; transition:all 0.18s;
-}
-.tab-btn.on { color:var(--text); border-bottom-color:var(--accent); }
+/* COPYRIGHT BOXES */
+.wbox { background:rgba(244,63,94,.07); border:1px solid rgba(244,63,94,.22); border-radius:9px; padding:12px 14px; margin-bottom:14px }
+.wtitle { font-size:11px; font-weight:700; color:var(--re); text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px }
+.wli { font-size:12px; color:#fda4af; display:flex; gap:8px; padding:3px 0 }
+.wli::before { content:'✗'; color:var(--re); flex-shrink:0 }
+.gbox { background:rgba(16,185,129,.07); border:1px solid rgba(16,185,129,.22); border-radius:9px; padding:12px 14px; margin-bottom:14px }
+.gtitle { font-size:11px; font-weight:700; color:var(--gr); text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px }
+.gli { font-size:12px; color:#6ee7b7; display:flex; gap:8px; padding:3px 0 }
+.gli::before { content:'✓'; color:var(--gr); flex-shrink:0 }
+.tli { font-size:12px; color:var(--m1); padding:7px 0; border-bottom:1px solid var(--b1); display:flex; gap:8px; line-height:1.5 }
+.tli:last-child { border:none; padding-bottom:0 }
+.tli::before { content:'→'; color:var(--pu); flex-shrink:0; margin-top:1px }
 
-/* ── TAB PANELS ── */
-.tab-panel { display:none; padding:16px 18px; }
-.tab-panel.on { display:block; }
+/* STRATEGY GRID */
+.sg { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:16px }
+.scard { background:var(--card); border:1px solid var(--b1); border-radius:12px; padding:18px }
+.shd { font-size:13px; font-weight:700; margin-bottom:12px; display:flex; gap:8px; align-items:center }
+.snum { font-family:'Cinzel',serif; font-size:22px; font-weight:900; color:var(--b2); line-height:1 }
+.sli { font-size:12px; color:var(--m1); padding:7px 0; border-bottom:1px solid var(--b1); display:flex; gap:8px; line-height:1.5 }
+.sli:last-child { border:none; padding-bottom:0 }
 
-/* SCRIPT PANEL */
-.script-block {
-  background:var(--card2); border:1px solid var(--border);
-  border-radius:10px; padding:14px 16px; margin-bottom:12px;
+/* MOBILE */
+#mt { display:none; align-items:center; justify-content:center; width:36px; height:36px; background:var(--card); border:1px solid var(--b1); border-radius:8px; cursor:pointer; font-size:18px }
+@media(max-width:768px) {
+  #sb { transform:translateX(-220px) }
+  #sb.open { transform:translateX(0) }
+  #mn { margin-left:0 }
+  #ct { padding:14px }
+  #gd { grid-template-columns:1fr }
+  .tg2,.sg { grid-template-columns:1fr }
+  #tb { padding:0 14px }
+  #mt { display:flex }
 }
-.scene-label {
-  font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px;
-  color:var(--accent); margin-bottom:6px; display:flex; align-items:center; gap:6px;
-}
-.scene-label span { color:var(--muted); font-weight:400; }
-.scene-text {
-  font-size:13px; line-height:1.75; color:var(--muted2);
-  font-family:'Inter',sans-serif;
-}
-.scene-img-hint {
-  margin-top:10px; padding:8px 12px; background:rgba(245,158,11,0.07);
-  border:1px solid rgba(245,158,11,0.2); border-radius:8px;
-  font-size:11px; color:#fbbf24; line-height:1.5;
-  display:flex; gap:8px; align-items:flex-start;
-}
-.scene-img-hint .ico { font-size:14px; flex-shrink:0; }
-
-.copy-script-btn {
-  width:100%; padding:9px; background:rgba(139,92,246,0.1);
-  border:1px solid rgba(139,92,246,0.3); color:#c4b5fd;
-  border-radius:8px; font-size:12px; font-weight:700;
-  cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.18s;
-  margin-top:4px;
-}
-.copy-script-btn:hover { background:rgba(139,92,246,0.2); }
-.copy-script-btn.copied { border-color:var(--green); color:var(--green); }
-
-/* IMAGES PANEL */
-.img-query-list { display:flex; flex-direction:column; gap:10px; }
-.img-query-item {
-  background:var(--card2); border:1px solid var(--border);
-  border-radius:10px; padding:13px 14px;
-  display:flex; align-items:flex-start; gap:12px;
-}
-.img-scene-tag {
-  font-size:10px; font-weight:700; background:var(--border2);
-  color:var(--muted2); padding:2px 8px; border-radius:4px;
-  white-space:nowrap; flex-shrink:0; margin-top:2px;
-  font-family:'JetBrains Mono',monospace;
-}
-.img-query-body { flex:1; }
-.img-query-desc { font-size:12px; color:var(--muted2); margin-bottom:8px; line-height:1.5; }
-.img-search-btns { display:flex; gap:6px; flex-wrap:wrap; }
-.img-src-btn {
-  font-size:11px; padding:4px 10px; border-radius:6px; cursor:pointer;
-  border:none; font-family:'Inter',sans-serif; font-weight:600; transition:all 0.15s;
-  text-decoration:none; display:inline-block;
-}
-.btn-google { background:rgba(66,133,244,0.15); color:#93c5fd; border:1px solid rgba(66,133,244,0.3); }
-.btn-unsplash { background:rgba(16,185,129,0.12); color:#6ee7b7; border:1px solid rgba(16,185,129,0.3); }
-.btn-pinterest { background:rgba(244,63,94,0.12); color:#fda4af; border:1px solid rgba(244,63,94,0.3); }
-.img-src-btn:hover { filter:brightness(1.3); transform:translateY(-1px); }
 
 /* TOAST */
-#toast {
-  position:fixed; bottom:22px; right:22px; z-index:999;
-  background:var(--green); color:#fff; padding:11px 18px; border-radius:10px;
-  font-size:13px; font-weight:700;
-  transform:translateY(50px); opacity:0; transition:all 0.28s;
-}
-#toast.on { transform:translateY(0); opacity:1; }
-
-@media (max-width:640px) {
-  header { padding:0 14px; }
-  main { padding:14px; }
-  #grid { grid-template-columns:1fr; }
-  .cat-bar { padding:10px 14px; }
-}
+#toast { position:fixed; bottom:20px; right:20px; z-index:999; background:var(--gr); color:#fff; padding:10px 18px; border-radius:9px; font-size:13px; font-weight:700; opacity:0; transform:translateY(40px); transition:all .25s }
+#toast.on { opacity:1; transform:translateY(0) }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">NERD STUDIO</div>
-  <div class="header-right">
-    <div class="date-pill" id="datePill">📅 —</div>
-    <button id="mainBtn" onclick="fetchContent()">⚡ Gerar Roteiros</button>
+<nav id="sb">
+  <div class="sbl">FULLNERD<small>STUDIO — Canal Creator</small></div>
+  <div class="sbn">
+    <div class="sbs">Conteudo</div>
+    <button class="sbi on" onclick="pg('roteiros',this)"><span style="font-size:16px;width:22px;text-align:center;display:inline-block">🎬</span> Roteiros e Narracao</button>
+    <button class="sbi" onclick="pg('imagens',this)"><span style="font-size:16px;width:22px;text-align:center;display:inline-block">🖼️</span> Guia de Imagens</button>
+    <div class="sbs">Criacao</div>
+    <button class="sbi" onclick="pg('prompts',this)"><span style="font-size:16px;width:22px;text-align:center;display:inline-block">✨</span> Prompts de IA</button>
+    <button class="sbi" onclick="pg('copyright',this)"><span style="font-size:16px;width:22px;text-align:center;display:inline-block">🛡️</span> Direitos Autorais</button>
+    <button class="sbi" onclick="pg('estrategia',this)"><span style="font-size:16px;width:22px;text-align:center;display:inline-block">📈</span> Estrategia Viral</button>
   </div>
-</header>
+  <div class="sbf">
+    <button id="genBtn" onclick="gerarRoteiros()">⚡ Gerar Conteudo do Dia</button>
+  </div>
+</nav>
 
-<div class="cat-bar" id="catBar">
-  <button class="cat-btn on" onclick="filter('all',this)">🌐 Todos</button>
-  <button class="cat-btn" onclick="filter('pokemon',this)">⚡ Pokémon</button>
-  <button class="cat-btn" onclick="filter('harrypotter',this)">🧙 Harry Potter</button>
-  <button class="cat-btn" onclick="filter('got',this)">🐉 Game of Thrones</button>
-  <button class="cat-btn" onclick="filter('games',this)">🎮 Games</button>
-  <button class="cat-btn" onclick="filter('anime',this)">⛩️ Anime</button>
-  <button class="cat-btn" onclick="filter('marvel',this)">🦸 Marvel</button>
-  <button class="cat-btn" onclick="filter('dc',this)">🦇 DC</button>
-  <button class="cat-btn" onclick="filter('series',this)">📺 Séries</button>
+<div id="mn">
+  <div id="tb">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div id="mt" onclick="document.getElementById('sb').classList.toggle('open')">☰</div>
+      <div class="pt" id="pgTitle">🎬 Roteiros e Narracao</div>
+    </div>
+    <div class="tr">
+      <div class="dpill" id="datePill">📅 —</div>
+      <div class="spill">✅ Copyright Safe</div>
+    </div>
+  </div>
+
+  <div id="ct">
+
+    <!-- PAGE: ROTEIROS -->
+    <div id="pg-roteiros">
+      <div class="cr">
+        <button class="catbtn on" onclick="filtrar('all',this)">🌐 Todos</button>
+        <button class="catbtn" onclick="filtrar('pokemon',this)">⚡ Pokemon</button>
+        <button class="catbtn" onclick="filtrar('harrypotter',this)">🧙 Harry Potter</button>
+        <button class="catbtn" onclick="filtrar('got',this)">🐉 Game of Thrones</button>
+        <button class="catbtn" onclick="filtrar('games',this)">🎮 Games</button>
+        <button class="catbtn" onclick="filtrar('anime',this)">⛩️ Anime</button>
+        <button class="catbtn" onclick="filtrar('marvel',this)">🦸 Marvel</button>
+        <button class="catbtn" onclick="filtrar('dc',this)">🦇 DC</button>
+        <button class="catbtn" onclick="filtrar('series',this)">📺 Series</button>
+      </div>
+      <div id="ld">
+        <div class="spin"></div>
+        <div style="font-size:14px;color:var(--m1)">Gerando roteiros com imagens copyright-free...</div>
+        <div style="font-size:11px;color:var(--m2);margin-top:6px;font-family:'JetBrains Mono',monospace" id="lstep">Selecionando pautas virais</div>
+      </div>
+      <div id="empty" style="text-align:center;padding:80px 20px">
+        <div style="font-size:52px;margin-bottom:16px">🎬</div>
+        <div style="font-size:18px;font-weight:700;margin-bottom:8px">Nenhum conteudo gerado ainda</div>
+        <div style="font-size:13px;color:var(--m2);line-height:1.7;max-width:420px;margin:0 auto">Clique em <strong style="color:var(--pu)">⚡ Gerar Conteudo do Dia</strong> no menu lateral para criar roteiros com narracoes prontas e guia de imagens seguras.</div>
+      </div>
+      <div id="gd"></div>
+    </div>
+
+    <!-- PAGE: IMAGENS -->
+    <div id="pg-imagens" style="display:none">
+      <div id="imgEmpty" style="text-align:center;padding:80px 20px">
+        <div style="font-size:52px;margin-bottom:16px">🖼️</div>
+        <div style="font-size:18px;font-weight:700;margin-bottom:8px">Guia de Imagens por Cena</div>
+        <div style="font-size:13px;color:var(--m2);line-height:1.7">Gere os roteiros primeiro e o guia aparece aqui automaticamente.</div>
+      </div>
+      <div id="imgContent"></div>
+    </div>
+
+    <!-- PAGE: PROMPTS DE IA -->
+    <div id="pg-prompts" style="display:none">
+      <div class="tg2">
+        <div class="tc">
+          <div class="th"><div style="font-size:28px">🎨</div><div><div class="tt2">Tela Final — TikTok/Reels</div><div class="ts2">Cole no Midjourney, Leonardo.ai ou Adobe Firefly</div></div></div>
+          <div class="pb" id="pEnd">cinematic nerd end screen TikTok vertical 9:16, dark fantasy atmosphere, glowing purple and gold arcane particles, ancient stone archway with runes, large centered empty space for text overlay, depth of field blur on edges, no characters no faces, photorealistic 8k, dramatic lighting, volumetric fog, zoom-friendly center composition --ar 9:16 --v 6</div>
+          <button class="tcopy" onclick="copP('pEnd',this)">📋 Copiar Prompt</button>
+        </div>
+        <div class="tc">
+          <div class="th"><div style="font-size:28px">💧</div><div><div class="tt2">Marca D'agua do Canal</div><div class="ts2">Cole no Midjourney, Leonardo.ai ou Adobe Firefly</div></div></div>
+          <div class="pb" id="pWater">minimalist watermark logo for nerd YouTube channel called FullNerd, transparent background PNG, simple geometric shield icon with lightning bolt inside, small clean text below, white and purple color scheme, flat vector style no gradients, suitable for video corner overlay, semi-transparent --ar 1:1 --v 6 --style raw</div>
+          <button class="tcopy" onclick="copP('pWater',this)">📋 Copiar Prompt</button>
+        </div>
+        <div class="tc">
+          <div class="th"><div style="font-size:28px">🐉</div><div><div class="tt2">Background — Game of Thrones</div><div class="ts2">Fundo para videos GoT e House of the Dragon</div></div></div>
+          <div class="pb" id="pGot">epic fantasy medieval castle at night, dragons flying in stormy sky, fire glowing on distant towers, dark moody atmosphere, no recognizable characters, cinematic composition, deep shadows, IMAX quality 8k --ar 16:9 --v 6</div>
+          <button class="tcopy" onclick="copP('pGot',this)">📋 Copiar Prompt</button>
+        </div>
+        <div class="tc">
+          <div class="th"><div style="font-size:28px">⚡</div><div><div class="tt2">Background — Estilo Pokemon</div><div class="ts2">Sem personagens oficiais — 100% seguro para monetizar</div></div></div>
+          <div class="pb" id="pPoke">vibrant anime-style landscape, lush green meadow with tall grass, glowing mysterious orbs floating, sunset orange sky, dramatic light rays, absolutely no Pokemon characters, studio ghibli inspired, ultra detailed, cinematic --ar 16:9 --v 6</div>
+          <button class="tcopy" onclick="copP('pPoke',this)">📋 Copiar Prompt</button>
+        </div>
+        <div class="tc">
+          <div class="th"><div style="font-size:28px">🧙</div><div><div class="tt2">Background — Harry Potter</div><div class="ts2">Atmosfera magica sem personagens protegidos</div></div></div>
+          <div class="pb" id="pHp">magical gothic castle library at night, floating candles illuminating ancient spellbooks, spiral staircases, enchanted windows showing starry sky, mystical glowing dust particles, no recognizable characters, cinematic fantasy atmosphere 8k --ar 16:9 --v 6</div>
+          <button class="tcopy" onclick="copP('pHp',this)">📋 Copiar Prompt</button>
+        </div>
+        <div class="tc">
+          <div class="th"><div style="font-size:28px">🎬</div><div><div class="tt2">Thumbnail Viral</div><div class="ts2">Miniatura impactante para YouTube e TikTok</div></div></div>
+          <div class="pb" id="pThumb">YouTube thumbnail split screen dramatic composition, left side dark moody fantasy right side bright epic reveal, glowing text space in center, shocked energy without showing face, vibrant red and gold high contrast, professional trending design 2025 --ar 16:9 --v 6</div>
+          <button class="tcopy" onclick="copP('pThumb',this)">📋 Copiar Prompt</button>
+        </div>
+      </div>
+      <div style="margin-top:20px;background:var(--card);border:1px solid var(--b1);border-radius:12px;padding:18px">
+        <div style="font-size:13px;font-weight:700;margin-bottom:12px">🤖 Onde gerar as imagens</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px">
+          <div style="background:var(--s2);border:1px solid var(--b1);border-radius:9px;padding:12px"><div style="font-size:12px;font-weight:700;color:#6ee7b7;margin-bottom:4px">Leonardo.ai ⭐ Gratis</div><div style="font-size:11px;color:var(--m2);line-height:1.5">Creditos diarios gratuitos. Ideal para iniciantes.<br>app.leonardo.ai</div></div>
+          <div style="background:var(--s2);border:1px solid var(--b1);border-radius:9px;padding:12px"><div style="font-size:12px;font-weight:700;color:#fcd34d;margin-bottom:4px">Adobe Firefly ⭐ Safe</div><div style="font-size:11px;color:var(--m2);line-height:1.5">100% copyright safe. Plano gratis disponivel.<br>firefly.adobe.com</div></div>
+          <div style="background:var(--s2);border:1px solid var(--b1);border-radius:9px;padding:12px"><div style="font-size:12px;font-weight:700;color:#c4b5fd;margin-bottom:4px">Midjourney Pago</div><div style="font-size:11px;color:var(--m2);line-height:1.5">Melhor qualidade. $10/mes. Via Discord.</div></div>
+          <div style="background:var(--s2);border:1px solid var(--b1);border-radius:9px;padding:12px"><div style="font-size:12px;font-weight:700;color:#67e8f9;margin-bottom:4px">DALL-E 3</div><div style="font-size:11px;color:var(--m2);line-height:1.5">Via ChatGPT Plus. Simples e rapido de usar.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: COPYRIGHT -->
+    <div id="pg-copyright" style="display:none">
+      <div style="max-width:820px">
+        <div class="wbox">
+          <div class="wtitle">⚠️ NUNCA use estas fontes — risco de copyright strike</div>
+          <div class="wli">Google Imagens — quase tudo tem direitos autorais</div>
+          <div class="wli">Capturas de trailers, filmes ou series oficiais</div>
+          <div class="wli">Fan art sem permissao explicita do artista</div>
+          <div class="wli">Imagens dos personagens Pokemon, HP ou GoT de fontes nao oficiais</div>
+          <div class="wli">Musicas com direitos — TikTok silencia ou remove automaticamente</div>
+        </div>
+        <div class="gbox">
+          <div class="gtitle">✓ Fontes 100% seguras para monetizar</div>
+          <div class="gli">Unsplash.com — fotos em alta resolucao, uso comercial free</div>
+          <div class="gli">Pexels.com — fotos e videos, licenca gratuita comercial</div>
+          <div class="gli">Pixabay.com — imagens e videos sem copyright</div>
+          <div class="gli">Wikimedia Commons — obras em dominio publico com filtro</div>
+          <div class="gli">Adobe Firefly e Leonardo.ai — imagens geradas por IA, voce tem os direitos</div>
+          <div class="gli">Gameplay proprio — maioria dos jogos permite para review e educativo</div>
+        </div>
+        <div class="tg2">
+          <div class="tc">
+            <div class="th"><div style="font-size:28px">🎵</div><div><div class="tt2">Musicas Copyright-Free</div><div class="ts2">Use sem medo em todos os videos</div></div></div>
+            <div class="tli">YouTube Audio Library — no YouTube Studio, 100% gratis</div>
+            <div class="tli">Pixabay Music — pixabay.com/music, gratis e comercial</div>
+            <div class="tli">Free Music Archive — freemusicarchive.org</div>
+            <div class="tli">Epidemic Sound — $11/mes, biblioteca profissional</div>
+            <div class="tli">Artlist.io — $16/mes, qualidade maxima para YouTube</div>
+          </div>
+          <div class="tc">
+            <div class="th"><div style="font-size:28px">📱</div><div><div class="tt2">TikTok — Regras Especificas</div><div class="ts2">Deteccao automatica de copyright</div></div></div>
+            <div class="tli">Sons: use SOMENTE da biblioteca oficial do TikTok</div>
+            <div class="tli">Personagens: use arte de IA "inspired by", nunca imagens originais</div>
+            <div class="tli">Conteudo comentado e educativo tem protecao de fair use</div>
+            <div class="tli">Monetizacao Creator: disponivel apos 10k seguidores</div>
+            <div class="tli">Leia as diretrizes do TikTok Creator Program antes de monetizar</div>
+          </div>
+          <div class="tc">
+            <div class="th"><div style="font-size:28px">🎙️</div><div><div class="tt2">IA de Voz para Narracao</div><div class="ts2">Cole o roteiro e gere o audio</div></div></div>
+            <div class="tli">ElevenLabs — mais natural, plano free disponivel</div>
+            <div class="tli">Play.ht — otimas vozes em portugues</div>
+            <div class="tli">Murf.ai — otimo para narracao longa</div>
+            <div class="tli">TikTok text-to-speech — direto no app, totalmente gratis</div>
+            <div class="tli">Use sempre voz PT-BR com sotaque neutro</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE: ESTRATEGIA -->
+    <div id="pg-estrategia" style="display:none">
+      <div style="max-width:900px">
+        <div style="background:var(--card);border:1px solid var(--b1);border-radius:12px;padding:16px 20px;margin-bottom:18px">
+          <div style="font-size:14px;font-weight:700;margin-bottom:3px">🚀 Plano de 90 Dias — Canal Nerd do Zero</div>
+          <div style="font-size:12px;color:var(--m2)">Estrategia focada em crescimento rapido e renda por visualizacoes</div>
+        </div>
+        <div class="sg">
+          <div class="scard"><div class="shd"><span class="snum">01</span> Dias 1–30 (Base)</div>
+            <div class="sli">📅 Poste 1 video por dia no minimo</div>
+            <div class="sli">⏱️ Duracao ideal: 45–90 seg no TikTok</div>
+            <div class="sli">🕐 Melhores horarios: 7h–9h e 18h–21h</div>
+            <div class="sli">🏷️ 3–5 hashtags nichadas mais 1 geral</div>
+            <div class="sli">♻️ Reposte no Reels e YouTube Shorts</div>
+          </div>
+          <div class="scard"><div class="shd"><span class="snum">02</span> Dias 31–60 (Escala)</div>
+            <div class="sli">📊 Analise os 3 videos com mais views</div>
+            <div class="sli">🔁 Faca series dos temas que engajaram</div>
+            <div class="sli">💬 Responda TODOS os comentarios (boost no algo)</div>
+            <div class="sli">🎯 Use polls e perguntas nos videos</div>
+            <div class="sli">📱 Ative YouTube Shorts simultaneamente</div>
+          </div>
+          <div class="scard"><div class="shd"><span class="snum">03</span> Dias 61–90 (Renda)</div>
+            <div class="sli">💰 10k seguidores — ativar TikTok Creator Program</div>
+            <div class="sli">🤝 Buscar parcerias com canais do mesmo nicho</div>
+            <div class="sli">🛒 Afiliados de jogos e produtos nerd</div>
+            <div class="sli">📦 1k subs e 4k horas — YT monetizacao</div>
+            <div class="sli">🌐 Crie comunidade no Discord ou Telegram</div>
+          </div>
+          <div class="scard"><div class="shd"><span class="snum">04</span> Formatos que Viralizam</div>
+            <div class="sli">🔥 "Voce sabia que..." curiosidades nerd</div>
+            <div class="sli">🏆 Rankings e Top 10 dos temas</div>
+            <div class="sli">🤔 Teorias e polemicas do universo</div>
+            <div class="sli">📢 Breaking news e novidades em primeira mao</div>
+            <div class="sli">🆚 Comparacoes: antes e depois, X vs Y</div>
+          </div>
+          <div class="scard"><div class="shd"><span class="snum">05</span> Hashtags por Tema</div>
+            <div class="sli">⚡ #pokemon #pokemontiktok #pokemonbrasil</div>
+            <div class="sli">🧙 #harrypotter #wizardingworld #hogwarts</div>
+            <div class="sli">🐉 #gameofthrones #houseofthedragon #got</div>
+            <div class="sli">🎮 #games #gamer #gamerbrasil</div>
+            <div class="sli">🌐 #nerd #geek #nerdbrasil (sempre incluir)</div>
+          </div>
+          <div class="scard"><div class="shd"><span class="snum">06</span> Ferramentas Essenciais</div>
+            <div class="sli">🎙️ ElevenLabs — narracao IA gratis</div>
+            <div class="sli">🎨 Leonardo.ai — imagens IA gratis</div>
+            <div class="sli">✂️ CapCut — edicao de video gratis</div>
+            <div class="sli">🎵 Pixabay Music — trilhas free</div>
+            <div class="sli">📊 TikTok Analytics — analise diariamente</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
-
-<main>
-  <div id="empty">
-    <div class="empty-ico">🎬</div>
-    <div class="empty-t">Pronto para criar conteúdo</div>
-    <div class="empty-s">Clique em <strong style="color:var(--accent)">⚡ Gerar Roteiros</strong> e receba roteiros completos de narração<br>com indicação de imagem para cada trecho do vídeo.</div>
-  </div>
-  <div id="loading">
-    <div class="spin"></div>
-    <div class="load-label">Gerando pautas e roteiros completos...</div>
-    <div class="load-step" id="lstep">Buscando notícias • Escrevendo roteiros • Indicando imagens</div>
-  </div>
-  <div id="grid"></div>
-</main>
 
 <div id="toast"></div>
 
 <script>
-// ── date ──
-const d = new Date();
-document.getElementById('datePill').textContent =
-  '📅 ' + d.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+const hoje = new Date();
+document.getElementById('datePill').textContent = '📅 ' + hoje.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'});
 
-let allItems = [];
-let activeFilter = 'all';
+let todosVideos = [], filtroAtivo = 'all';
 
-const BANNER_COLORS = {
-  pokemon:'linear-gradient(90deg,#fbbf24,#f59e0b)',
+const BANNERS = {
+  pokemon:'linear-gradient(90deg,#fbbf24,#f97316)',
   harrypotter:'linear-gradient(90deg,#7c3aed,#4f46e5)',
   got:'linear-gradient(90deg,#f43f5e,#7f1d1d)',
   games:'linear-gradient(90deg,#22d3ee,#0891b2)',
   anime:'linear-gradient(90deg,#ef4444,#b91c1c)',
   marvel:'linear-gradient(90deg,#ef4444,#991b1b)',
   dc:'linear-gradient(90deg,#3b82f6,#1d4ed8)',
-  tech:'linear-gradient(90deg,#10b981,#047857)',
-  series:'linear-gradient(90deg,#a855f7,#7e22ce)',
+  series:'linear-gradient(90deg,#a855f7,#7e22ce)'
+};
+const LABELS = {
+  pokemon:'⚡ Pokemon', harrypotter:'🧙 Harry Potter', got:'🐉 Game of Thrones',
+  games:'🎮 Games', anime:'⛩️ Anime', marvel:'🦸 Marvel', dc:'🦇 DC', series:'📺 Series'
+};
+const PTITLES = {
+  roteiros:'🎬 Roteiros e Narracao', imagens:'🖼️ Guia de Imagens',
+  prompts:'✨ Prompts de IA', copyright:'🛡️ Direitos Autorais', estrategia:'📈 Estrategia Viral'
 };
 
-const TAG_LABELS = {
-  pokemon:'⚡ Pokémon', harrypotter:'🧙 Harry Potter', got:'🐉 Game of Thrones',
-  games:'🎮 Games', anime:'⛩️ Anime', marvel:'🦸 Marvel',
-  dc:'🦇 DC', tech:'💻 Tech', series:'📺 Séries',
-};
-
-// ── FETCH ──
-async function fetchContent() {
-  const btn = document.getElementById('mainBtn');
-  btn.disabled = true; btn.textContent = '⏳ Gerando...';
-  document.getElementById('empty').style.display = 'none';
-  document.getElementById('grid').innerHTML = '';
-  document.getElementById('loading').style.display = 'block';
-
-  const steps = [
-    'Buscando notícias • Selecionando pautas • Analisando tendências',
-    'Escrevendo roteiros de narração • Dividindo em cenas',
-    'Indicando imagens por cena • Montando pacote final...'
-  ];
-  let si = 0;
-  const stepTick = setInterval(() => {
-    si = (si+1) % steps.length;
-    document.getElementById('lstep').textContent = steps[si];
-  }, 2200);
-
-  const today = d.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
-
-  const prompt = `Hoje é ${today}. Você é um roteirista especializado em canais nerd no YouTube Brasil.
-
-Gere 11 pautas de vídeo abrangendo os temas: Pokémon, Harry Potter, Game of Thrones / House of the Dragon, Games em geral, Anime, Marvel, DC, Séries.
-
-Para cada pauta, escreva um ROTEIRO COMPLETO DE NARRAÇÃO em português brasileiro, dividido em cenas. O apresentador NÃO vai aparecer — o vídeo será feito com imagens + voz sintética de IA. O texto deve soar natural quando narrado, com ritmo envolvente.
-
-Responda SOMENTE em JSON válido (sem markdown, sem blocos de código), neste formato exato:
-{
-  "videos": [
-    {
-      "id": 1,
-      "titulo": "título chamativo do vídeo",
-      "categoria": "pokemon|harrypotter|got|games|anime|marvel|dc|tech|series",
-      "viral": 8,
-      "duracao_estimada": "5-7 min",
-      "roteiro": [
-        {
-          "cena": "Abertura",
-          "tempo": "0:00 - 0:30",
-          "texto": "texto completo de narração desta cena, mínimo 4 frases envolventes",
-          "imagem_busca": "termos em inglês para buscar imagem no Google/Pinterest ex: 'Pikachu shocked expression 4k'",
-          "imagem_desc": "descrição em português do que deve aparecer na tela nesta cena"
-        },
-        {
-          "cena": "Desenvolvimento 1",
-          "tempo": "0:30 - 2:00",
-          "texto": "...",
-          "imagem_busca": "...",
-          "imagem_desc": "..."
-        },
-        {
-          "cena": "Desenvolvimento 2",
-          "tempo": "2:00 - 4:00",
-          "texto": "...",
-          "imagem_busca": "...",
-          "imagem_desc": "..."
-        },
-        {
-          "cena": "Clímax / Revelação",
-          "tempo": "4:00 - 5:30",
-          "texto": "...",
-          "imagem_busca": "...",
-          "imagem_desc": "..."
-        },
-        {
-          "cena": "Encerramento",
-          "tempo": "5:30 - 6:00",
-          "texto": "Se você curtiu esse vídeo, deixa o like e se inscreve no canal para não perder nenhum conteúdo. Até a próxima!",
-          "imagem_busca": "subscribe youtube button animated nerd",
-          "imagem_desc": "Tela de encerramento com chamada para inscrição"
-        }
-      ]
-    }
-  ]
+function pg(id, btn) {
+  document.querySelectorAll('[id^="pg-"]').forEach(p => p.style.display = 'none');
+  document.getElementById('pg-' + id).style.display = 'block';
+  document.querySelectorAll('.sbi').forEach(b => b.classList.remove('on'));
+  if (btn) btn.classList.add('on');
+  document.getElementById('pgTitle').textContent = PTITLES[id] || '';
+  if (window.innerWidth <= 768) document.getElementById('sb').classList.remove('open');
 }
 
-Regras do roteiro:
-- Texto da narração deve ser corrido, sem marcações como [pausa] ou (som)
-- Linguagem informal e empolgante, como se fosse um amigo contando uma novidade
-- Cada cena com mínimo de 5-8 frases densas de conteúdo (exceto encerramento)
-- Use dados, curiosidades, comparações para enriquecer
-- Pokémon: focar em curiosidades, evoluções, jogos, anime
-- Harry Potter: focar em teorias, detalhes ocultos, spin-offs, Hogwarts Legacy
-- Game of Thrones/House of Dragon: focar em lore, personagens, teorias
-- Gere 2-3 vídeos de Pokémon, 2 de Harry Potter, 2 de GoT/HotD e os restantes distribuídos entre Games/Anime/Marvel/DC/Séries`;
+function filtrar(cat, btn) {
+  filtroAtivo = cat;
+  document.querySelectorAll('.catbtn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderRoteiros(todosVideos);
+}
+
+async function gerarRoteiros() {
+  const btn = document.getElementById('genBtn');
+  btn.disabled = true; btn.textContent = '⏳ Gerando...';
+  pg('roteiros', document.querySelector('.sbi'));
+  document.getElementById('empty').style.display = 'none';
+  document.getElementById('gd').innerHTML = '';
+  document.getElementById('ld').style.display = 'block';
+
+  const steps = [
+    'Selecionando pautas virais e analisando tendencias',
+    'Escrevendo narracao cena a cena com linguagem natural',
+    'Mapeando imagens copyright-free e finalizando...'
+  ];
+  let si = 0;
+  const tick = setInterval(() => { si = (si + 1) % steps.length; document.getElementById('lstep').textContent = steps[si]; }, 2200);
+
+  const dh = hoje.toLocaleDateString('pt-BR', {weekday:'long', day:'2-digit', month:'long', year:'numeric'});
+
+  const prompt = `Hoje eh ${dh}. Voce eh um roteirista de canais nerd brasileiros para TikTok e YouTube Shorts.
+
+REGRAS OBRIGATORIAS:
+- Os videos usam IMAGENS + NARRACAO DE IA. Nenhum apresentador aparece na camera.
+- O texto de narracao deve soar completamente natural quando lido por voz sintetica como ElevenLabs ou Murf.
+- TODAS as imagens sugeridas devem ser 100% copyright-free: apenas Unsplash, Pexels, Pixabay ou ai-generated.
+- NUNCA sugira imagens de personagens com direitos autorais. Sugira cenarios, objetos, paisagens, ou arte estilo X gerada por IA.
+- Narracao em portugues brasileiro, tom informal e empolgante como um amigo nerd contando.
+
+Gere 11 roteiros de video curto de aproximadamente 60 segundos sobre: Pokemon, Harry Potter, Game of Thrones e House of Dragon, Games, Anime, Marvel, DC, Series.
+Distribuicao obrigatoria: 3 Pokemon, 2 Harry Potter, 2 GoT ou HotD, 4 outros temas.
+
+Responda SOMENTE em JSON valido sem markdown ou backticks:
+{"videos":[{"id":1,"titulo":"titulo chamativo maximo 75 chars","categoria":"pokemon","viral":8,"duracao":"60 seg","cenas":[{"nome":"Abertura","tempo":"0:00-0:10","narracao":"texto natural minimo 4 frases empolgantes para narracao de IA","imagem_desc":"o que mostrar na tela em portugues","imagem_busca":"english search terms for unsplash pexels","imagem_fonte":"unsplash"},{"nome":"Desenvolvimento","tempo":"0:10-0:45","narracao":"desenvolvimento com dados e curiosidades minimo 6 frases naturais","imagem_desc":"o que mostrar","imagem_busca":"english terms","imagem_fonte":"pexels"},{"nome":"Revelacao","tempo":"0:45-0:55","narracao":"momento mais impactante e surpreendente 3-4 frases","imagem_desc":"o que mostrar","imagem_busca":"english terms","imagem_fonte":"ai-generated"},{"nome":"Encerramento","tempo":"0:55-1:00","narracao":"Se curtiu esse conteudo segue o canal que tem muito mais todo dia!","imagem_desc":"Tela escura com logo do canal centralizado","imagem_busca":"dark nerd gaming background abstract purple","imagem_fonte":"ai-generated"}]}]}`;
 
   try {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({
-        model:"claude-sonnet-4-6",
-        max_tokens:8000,
-        messages:[{role:"user",content:prompt}]
-      })
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({model:"claude-sonnet-4-6", max_tokens:8000, messages:[{role:"user", content:prompt}]})
     });
     const data = await res.json();
-    clearInterval(stepTick);
-
-    const raw = data.content.filter(b=>b.type==='text').map(b=>b.text).join('');
+    clearInterval(tick);
+    const raw = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
     let parsed;
     try {
-      const clean = raw.replace(/```json|```/g,'').trim();
+      const clean = raw.replace(/```json|```/g, '').trim();
       const m = clean.match(/\{[\s\S]*\}/);
       parsed = JSON.parse(m ? m[0] : clean);
-    } catch(e) { throw new Error('Erro ao interpretar resposta da IA'); }
-
-    allItems = parsed.videos || [];
-    render(allItems);
-
+    } catch(e) { throw new Error('Erro ao processar resposta. Tente novamente.'); }
+    todosVideos = parsed.videos || [];
+    renderRoteiros(todosVideos);
+    renderImgGuide(todosVideos);
   } catch(err) {
-    clearInterval(stepTick);
-    document.getElementById('grid').innerHTML = `
-      <div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--red)">
-        <div style="font-size:36px;margin-bottom:12px">⚠️</div>
-        <div style="font-weight:700">${err.message}</div>
-      </div>`;
+    clearInterval(tick);
+    document.getElementById('gd').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--re)"><div style="font-size:36px;margin-bottom:12px">⚠️</div><div style="font-weight:700">${err.message}</div></div>`;
   }
-
-  document.getElementById('loading').style.display = 'none';
+  document.getElementById('ld').style.display = 'none';
   btn.disabled = false; btn.textContent = '🔄 Gerar Novos';
 }
 
-// ── RENDER ──
-function render(items) {
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-  const list = activeFilter==='all' ? items : items.filter(i=>i.categoria===activeFilter);
-
-  if (!list.length) {
-    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted)">
-      <div style="font-size:36px;margin-bottom:12px">🔍</div>
-      <div>Nenhum vídeo nessa categoria hoje</div></div>`;
+function renderRoteiros(videos) {
+  const gd = document.getElementById('gd');
+  gd.innerHTML = '';
+  document.getElementById('empty').style.display = 'none';
+  const lista = filtroAtivo === 'all' ? videos : videos.filter(v => v.categoria === filtroAtivo);
+  if (!lista.length) {
+    gd.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--m2)"><div style="font-size:40px;margin-bottom:12px">🔍</div><div>Nenhum video nessa categoria hoje</div></div>';
     return;
   }
-
-  list.forEach((item, idx) => {
+  lista.forEach((v, idx) => {
     const card = document.createElement('div');
-    card.className = 'vcard';
-    card.style.animationDelay = (idx*0.07)+'s';
+    card.className = 'vc';
+    card.style.animationDelay = (idx * .06) + 's';
+    const banner = BANNERS[v.categoria] || 'linear-gradient(90deg,#6366f1,#8b5cf6)';
+    const tgc = 'tg-' + (v.categoria || 'series');
+    const tgl = LABELS[v.categoria] || v.categoria;
 
-    const banner = BANNER_COLORS[item.categoria] || 'linear-gradient(90deg,#6366f1,#8b5cf6)';
-    const tagClass = 'tag-'+(item.categoria||'series');
-    const tagLabel = TAG_LABELS[item.categoria] || item.categoria;
-    const viralColor = item.viral >= 9 ? '#f59e0b' : item.viral >= 7 ? '#10b981' : '#64748b';
-
-    // build script html
-    const roteiro = item.roteiro || [];
-    const scriptHTML = roteiro.map(c => `
-      <div class="script-block">
-        <div class="scene-label">🎬 ${c.cena} <span>${c.tempo || ''}</span></div>
-        <div class="scene-text">${c.texto}</div>
-        <div class="scene-img-hint">
-          <div class="ico">🖼️</div>
-          <div><strong style="color:#fbbf24;display:block;margin-bottom:2px">Imagem sugerida:</strong>${c.imagem_desc}</div>
+    const cH = (v.cenas || []).map(c => `
+      <div class="sc">
+        <div class="sh">
+          <span class="sname">${c.nome}</span>
+          <span class="stime">${c.tempo || ''}</span>
+          <span class="sbadge">✅ Safe</span>
+        </div>
+        <div class="stx">${c.narracao}</div>
+        <div class="simtip">
+          <div class="sitl">📷 Imagem desta cena</div>
+          <div class="sitd">${c.imagem_desc || ''}</div>
+          <div class="sits">✅ Fonte: ${c.imagem_fonte || 'unsplash'}</div>
         </div>
       </div>`).join('');
 
-    // build images html
-    const imagesHTML = roteiro.map((c,i) => {
-      const gq = encodeURIComponent(c.imagem_busca);
-      return `
-      <div class="img-query-item">
-        <div class="img-scene-tag">CENA ${i+1}</div>
-        <div class="img-query-body">
-          <div class="img-query-desc">🖼️ ${c.imagem_desc}</div>
-          <div class="img-search-btns">
-            <a class="img-src-btn btn-google" href="https://www.google.com/search?q=${gq}&tbm=isch&tbs=isz:l" target="_blank">🔍 Google Imagens</a>
-            <a class="img-src-btn btn-unsplash" href="https://unsplash.com/s/photos/${gq}" target="_blank">📷 Unsplash</a>
-            <a class="img-src-btn btn-pinterest" href="https://pinterest.com/search/pins/?q=${gq}" target="_blank">📌 Pinterest</a>
+    const tf = (v.cenas || []).map(c => `[${c.nome} — ${c.tempo}]\n${c.narracao}`).join('\n\n');
+    const enc = encodeURIComponent(tf);
+
+    const iH = (v.cenas || []).map((c, i) => {
+      const q = encodeURIComponent(c.imagem_busca || '');
+      return `<div class="ii">
+        <div class="inum">C${i+1}</div>
+        <div class="ibody">
+          <div class="idesc">${c.imagem_desc || ''}</div>
+          <div class="isrc">✅ Fonte: ${c.imagem_fonte || 'unsplash'}</div>
+          <div class="ibrow">
+            <a class="ib ibu" href="https://unsplash.com/s/photos/${q}" target="_blank">📷 Unsplash</a>
+            <a class="ib ibp" href="https://www.pexels.com/search/${q}/" target="_blank">📸 Pexels</a>
+            <a class="ib ibw" href="https://pixabay.com/images/search/${q}/" target="_blank">🌐 Pixabay</a>
+            <a class="ib ibm" href="https://app.leonardo.ai/" target="_blank">🤖 Gerar IA</a>
           </div>
         </div>
       </div>`;
     }).join('');
 
-    const fullScript = roteiro.map(c => `[${c.cena} — ${c.tempo}]\n${c.texto}`).join('\n\n');
-    const escapedScript = encodeURIComponent(fullScript);
-
     card.innerHTML = `
-      <div class="card-banner" style="background:${banner}"></div>
-      <div class="card-head">
-        <div class="card-num">${String(idx+1).padStart(2,'0')}</div>
-        <div class="card-meta">
-          <div class="card-tags">
-            <span class="tag ${tagClass}">${tagLabel}</span>
-            <span class="viral-badge">🔥 ${item.viral}/10</span>
-            <span style="font-size:11px;color:var(--muted);padding:2px 0">⏱ ${item.duracao_estimada||'5-8 min'}</span>
+      <div class="vs" style="background:${banner}"></div>
+      <div class="vt">
+        <div class="vn">${String(idx+1).padStart(2,'0')}</div>
+        <div class="vi">
+          <div class="vtg">
+            <span class="tg ${tgc}">${tgl}</span>
+            <span class="vbg">🔥 ${v.viral || '?'}/10</span>
+            <span class="vsafe">✅ Safe</span>
+            <span style="font-size:10px;color:var(--m2)">⏱ ${v.duracao || '~60s'}</span>
           </div>
-          <div class="card-title">${item.titulo}</div>
+          <div class="vtt">${v.titulo}</div>
         </div>
       </div>
-      <div class="card-tabs">
-        <button class="tab-btn on" onclick="openTab(this,'script${item.id}','img${item.id}')">📝 Roteiro Completo</button>
-        <button class="tab-btn" onclick="openTab(this,'img${item.id}','script${item.id}')">🖼️ Guia de Imagens</button>
+      <div class="tabs">
+        <button class="tab on" onclick="abaCard(this,'sc${v.id}','im${v.id}')">📝 Narracao por Cena</button>
+        <button class="tab" onclick="abaCard(this,'im${v.id}','sc${v.id}')">🖼️ Buscar Imagens</button>
       </div>
-      <div class="tab-panel on" id="script${item.id}">
-        ${scriptHTML}
-        <button class="copy-script-btn" id="copyBtn${item.id}" onclick="copyScript('${escapedScript}','copyBtn${item.id}')">
-          📋 Copiar Roteiro Completo para IA de Voz
+      <div class="pan on" id="sc${v.id}">
+        ${cH}
+        <button class="cbtn" id="cb${v.id}" onclick="copR('${enc}','cb${v.id}')">
+          🎙️ Copiar Narracao Completa — Cole na IA de Voz
         </button>
       </div>
-      <div class="tab-panel" id="img${item.id}">
-        <div class="img-query-list">${imagesHTML}</div>
-      </div>`;
-
-    grid.appendChild(card);
+      <div class="pan" id="im${v.id}">${iH}</div>`;
+    gd.appendChild(card);
   });
 }
 
-// ── TABS ──
-function openTab(btn, showId, hideId) {
-  document.getElementById(showId).classList.add('on');
-  document.getElementById(hideId).classList.remove('on');
-  const tabs = btn.closest('.card-tabs').querySelectorAll('.tab-btn');
-  tabs.forEach(t=>t.classList.remove('on'));
+function renderImgGuide(videos) {
+  const el = document.getElementById('imgContent'), em = document.getElementById('imgEmpty');
+  if (!videos.length) { em.style.display = 'block'; el.innerHTML = ''; return; }
+  em.style.display = 'none';
+  el.innerHTML = videos.map((v, i) => {
+    const tgc = 'tg-' + (v.categoria || 'series');
+    const tgl = LABELS[v.categoria] || v.categoria;
+    const its = (v.cenas || []).map((c, ci) => {
+      const q = encodeURIComponent(c.imagem_busca || '');
+      return `<div class="ii">
+        <div class="inum">C${ci+1}</div>
+        <div class="ibody">
+          <div class="idesc">${c.imagem_desc || ''}</div>
+          <div class="isrc">✅ Fonte: ${c.imagem_fonte || 'unsplash'}</div>
+          <div class="ibrow">
+            <a class="ib ibu" href="https://unsplash.com/s/photos/${q}" target="_blank">📷 Unsplash</a>
+            <a class="ib ibp" href="https://www.pexels.com/search/${q}/" target="_blank">📸 Pexels</a>
+            <a class="ib ibw" href="https://pixabay.com/images/search/${q}/" target="_blank">🌐 Pixabay</a>
+            <a class="ib ibm" href="https://app.leonardo.ai/" target="_blank">🤖 Gerar IA</a>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+    return `<div style="background:var(--card);border:1px solid var(--b1);border-radius:12px;overflow:hidden;margin-bottom:14px">
+      <div style="padding:12px 16px;border-bottom:1px solid var(--b1);display:flex;gap:10px;align-items:center">
+        <span style="font-family:'Cinzel',serif;font-size:18px;font-weight:900;color:var(--b2)">${String(i+1).padStart(2,'0')}</span>
+        <span class="tg ${tgc}">${tgl}</span>
+        <span style="font-size:13px;font-weight:700">${v.titulo}</span>
+      </div>
+      <div style="padding:12px 14px">${its}</div>
+    </div>`;
+  }).join('');
+}
+
+function abaCard(btn, s, h) {
+  document.getElementById(s).classList.add('on');
+  document.getElementById(h).classList.remove('on');
+  btn.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
   btn.classList.add('on');
 }
 
-// ── FILTER ──
-function filter(cat, btn) {
-  activeFilter = cat;
-  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  render(allItems);
+function copR(enc, bId) {
+  navigator.clipboard.writeText(decodeURIComponent(enc)).then(() => {
+    const b = document.getElementById(bId);
+    b.classList.add('ok'); b.textContent = '✅ Copiado! Cole no ElevenLabs, Murf ou Play.ht';
+    setTimeout(() => { b.classList.remove('ok'); b.textContent = '🎙️ Copiar Narracao Completa — Cole na IA de Voz'; }, 2500);
+    toast('Narracao copiada! Cole na IA de voz 🎙️');
+  });
 }
 
-// ── COPY ──
-function copyScript(encoded, btnId) {
-  const text = decodeURIComponent(encoded);
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = document.getElementById(btnId);
-    btn.classList.add('copied');
-    btn.textContent = '✅ Copiado! Cole na IA de voz';
-    setTimeout(() => {
-      btn.classList.remove('copied');
-      btn.textContent = '📋 Copiar Roteiro Completo para IA de Voz';
-    }, 2500);
-    toast('Roteiro copiado! Cole no ElevenLabs, Murf ou outra IA de voz 🎙️');
+function copP(id, btn) {
+  navigator.clipboard.writeText(document.getElementById(id).textContent).then(() => {
+    btn.classList.add('ok'); btn.textContent = '✅ Copiado!';
+    setTimeout(() => { btn.classList.remove('ok'); btn.textContent = '📋 Copiar Prompt'; }, 2000);
+    toast('Prompt copiado! Cole no Leonardo.ai ou Midjourney ✨');
   });
 }
 
 function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('on');
-  setTimeout(()=>t.classList.remove('on'), 3000);
+  setTimeout(() => t.classList.remove('on'), 3000);
 }
 </script>
 </body>
