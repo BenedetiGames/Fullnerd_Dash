@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NerdStudio — Roteiros & Imagens</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  --bg: #080810;
+  --surface: #0e0e1a;
+  --card: #13131f;
+  --card2: #181828;
+  --border: #1f1f35;
+  --border2: #2a2a45;
+  --accent: #8b5cf6;
+  --accent-glow: rgba(139,92,246,0.25);
+  --gold: #f59e0b;
+  --gold-dim: rgba(245,158,11,0.15);
+  --cyan: #22d3ee;
+  --green: #10b981;
+  --red: #f43f5e;
+  --text: #e2e8f0;
+  --muted: #64748b;
+  --muted2: #94a3b8;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Inter',sans-serif; min-height:100vh; overflow-x:hidden; }
+
+/* ── HEADER ── */
+header {
+  background: linear-gradient(180deg, #0d0b1e 0%, #080810 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top:0; z-index:200;
+}
+.logo {
+  font-family:'Cinzel',serif;
+  font-size:20px; font-weight:900;
+  letter-spacing:3px;
+  background: linear-gradient(90deg, #8b5cf6, #f59e0b);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.header-right { display:flex; gap:10px; align-items:center; }
+.date-pill {
+  background:var(--card); border:1px solid var(--border);
+  padding:5px 13px; border-radius:20px; font-size:12px; color:var(--muted);
+}
+#mainBtn {
+  background: linear-gradient(135deg, #7c3aed, #5b21b6);
+  color:#fff; border:none; padding:8px 20px; border-radius:8px;
+  font-size:13px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif;
+  transition:all 0.2s; letter-spacing:0.3px;
+}
+#mainBtn:hover { box-shadow:0 0 20px rgba(124,58,237,0.5); transform:translateY(-1px); }
+#mainBtn:disabled { opacity:0.4; transform:none; cursor:not-allowed; }
+
+/* ── CATEGORY FILTERS ── */
+.cat-bar {
+  background:var(--surface); border-bottom:1px solid var(--border);
+  padding:12px 28px; display:flex; gap:8px; flex-wrap:wrap;
+}
+.cat-btn {
+  background:var(--card); border:1px solid var(--border);
+  color:var(--muted); padding:6px 15px; border-radius:20px; font-size:13px;
+  cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.18s;
+  display:flex; align-items:center; gap:6px;
+}
+.cat-btn:hover, .cat-btn.on { border-color:var(--accent); color:var(--text); background:rgba(139,92,246,0.12); }
+
+/* ── LOADING ── */
+#loading { display:none; text-align:center; padding:100px 20px; }
+.spin { width:44px; height:44px; border:2px solid var(--border2); border-top-color:var(--accent);
+  border-radius:50%; animation:spin 0.7s linear infinite; margin:0 auto 18px; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.load-label { font-size:15px; color:var(--muted2); }
+.load-step { font-size:12px; color:var(--muted); margin-top:6px; font-family:'JetBrains Mono',monospace; }
+
+/* ── EMPTY ── */
+#empty { text-align:center; padding:100px 20px; }
+.empty-ico { font-size:56px; margin-bottom:16px; }
+.empty-t { font-size:18px; font-weight:700; margin-bottom:8px; }
+.empty-s { font-size:13px; color:var(--muted); line-height:1.6; }
+
+/* ── MAIN GRID ── */
+main { padding:24px 28px; }
+#grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(380px,1fr)); gap:20px; }
+
+/* ── VIDEO CARD ── */
+.vcard {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:14px; overflow:hidden;
+  transition:border-color 0.2s, box-shadow 0.2s;
+  animation:rise 0.4s ease forwards; opacity:0;
+}
+@keyframes rise { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+.vcard:hover { border-color:var(--accent); box-shadow:0 0 28px var(--accent-glow); }
+
+/* card top banner */
+.card-banner {
+  height: 8px;
+  width: 100%;
+}
+
+/* card header */
+.card-head { padding:16px 18px 0; display:flex; gap:12px; align-items:flex-start; }
+.card-num {
+  font-family:'Cinzel',serif; font-size:24px; font-weight:900;
+  color:var(--border2); flex-shrink:0; line-height:1;
+  margin-top:2px;
+}
+.card-meta { flex:1; }
+.card-tags { display:flex; gap:6px; margin-bottom:8px; flex-wrap:wrap; }
+.tag {
+  font-size:10px; font-weight:700; padding:2px 9px; border-radius:20px;
+  text-transform:uppercase; letter-spacing:0.6px;
+}
+.tag-pokemon  { background:rgba(251,191,36,0.18); color:#fbbf24; border:1px solid rgba(251,191,36,0.3); }
+.tag-harrypotter { background:rgba(139,92,246,0.2); color:#c4b5fd; border:1px solid rgba(139,92,246,0.35); }
+.tag-got      { background:rgba(244,63,94,0.18); color:#fda4af; border:1px solid rgba(244,63,94,0.3); }
+.tag-games    { background:rgba(34,211,238,0.15); color:#67e8f9; border:1px solid rgba(34,211,238,0.3); }
+.tag-anime    { background:rgba(239,68,68,0.15); color:#fca5a5; border:1px solid rgba(239,68,68,0.3); }
+.tag-marvel   { background:rgba(239,68,68,0.2); color:#fca5a5; border:1px solid rgba(239,68,68,0.35); }
+.tag-dc       { background:rgba(59,130,246,0.18); color:#93c5fd; border:1px solid rgba(59,130,246,0.3); }
+.tag-tech     { background:rgba(16,185,129,0.15); color:#6ee7b7; border:1px solid rgba(16,185,129,0.3); }
+.tag-series   { background:rgba(168,85,247,0.15); color:#d8b4fe; border:1px solid rgba(168,85,247,0.3); }
+
+.viral-badge {
+  font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px;
+  background:rgba(245,158,11,0.15); color:var(--gold); border:1px solid rgba(245,158,11,0.3);
+}
+.card-title { font-size:15px; font-weight:700; line-height:1.45; color:var(--text); }
+
+/* ── TABS ── */
+.card-tabs {
+  display:flex; border-bottom:1px solid var(--border); margin-top:14px;
+}
+.tab-btn {
+  flex:1; padding:9px 0; font-size:12px; font-weight:600; color:var(--muted);
+  background:none; border:none; cursor:pointer; font-family:'Inter',sans-serif;
+  border-bottom:2px solid transparent; margin-bottom:-1px; transition:all 0.18s;
+}
+.tab-btn.on { color:var(--text); border-bottom-color:var(--accent); }
+
+/* ── TAB PANELS ── */
+.tab-panel { display:none; padding:16px 18px; }
+.tab-panel.on { display:block; }
+
+/* SCRIPT PANEL */
+.script-block {
+  background:var(--card2); border:1px solid var(--border);
+  border-radius:10px; padding:14px 16px; margin-bottom:12px;
+}
+.scene-label {
+  font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px;
+  color:var(--accent); margin-bottom:6px; display:flex; align-items:center; gap:6px;
+}
+.scene-label span { color:var(--muted); font-weight:400; }
+.scene-text {
+  font-size:13px; line-height:1.75; color:var(--muted2);
+  font-family:'Inter',sans-serif;
+}
+.scene-img-hint {
+  margin-top:10px; padding:8px 12px; background:rgba(245,158,11,0.07);
+  border:1px solid rgba(245,158,11,0.2); border-radius:8px;
+  font-size:11px; color:#fbbf24; line-height:1.5;
+  display:flex; gap:8px; align-items:flex-start;
+}
+.scene-img-hint .ico { font-size:14px; flex-shrink:0; }
+
+.copy-script-btn {
+  width:100%; padding:9px; background:rgba(139,92,246,0.1);
+  border:1px solid rgba(139,92,246,0.3); color:#c4b5fd;
+  border-radius:8px; font-size:12px; font-weight:700;
+  cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.18s;
+  margin-top:4px;
+}
+.copy-script-btn:hover { background:rgba(139,92,246,0.2); }
+.copy-script-btn.copied { border-color:var(--green); color:var(--green); }
+
+/* IMAGES PANEL */
+.img-query-list { display:flex; flex-direction:column; gap:10px; }
+.img-query-item {
+  background:var(--card2); border:1px solid var(--border);
+  border-radius:10px; padding:13px 14px;
+  display:flex; align-items:flex-start; gap:12px;
+}
+.img-scene-tag {
+  font-size:10px; font-weight:700; background:var(--border2);
+  color:var(--muted2); padding:2px 8px; border-radius:4px;
+  white-space:nowrap; flex-shrink:0; margin-top:2px;
+  font-family:'JetBrains Mono',monospace;
+}
+.img-query-body { flex:1; }
+.img-query-desc { font-size:12px; color:var(--muted2); margin-bottom:8px; line-height:1.5; }
+.img-search-btns { display:flex; gap:6px; flex-wrap:wrap; }
+.img-src-btn {
+  font-size:11px; padding:4px 10px; border-radius:6px; cursor:pointer;
+  border:none; font-family:'Inter',sans-serif; font-weight:600; transition:all 0.15s;
+  text-decoration:none; display:inline-block;
+}
+.btn-google { background:rgba(66,133,244,0.15); color:#93c5fd; border:1px solid rgba(66,133,244,0.3); }
+.btn-unsplash { background:rgba(16,185,129,0.12); color:#6ee7b7; border:1px solid rgba(16,185,129,0.3); }
+.btn-pinterest { background:rgba(244,63,94,0.12); color:#fda4af; border:1px solid rgba(244,63,94,0.3); }
+.img-src-btn:hover { filter:brightness(1.3); transform:translateY(-1px); }
+
+/* TOAST */
+#toast {
+  position:fixed; bottom:22px; right:22px; z-index:999;
+  background:var(--green); color:#fff; padding:11px 18px; border-radius:10px;
+  font-size:13px; font-weight:700;
+  transform:translateY(50px); opacity:0; transition:all 0.28s;
+}
+#toast.on { transform:translateY(0); opacity:1; }
+
+@media (max-width:640px) {
+  header { padding:0 14px; }
+  main { padding:14px; }
+  #grid { grid-template-columns:1fr; }
+  .cat-bar { padding:10px 14px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">NERD STUDIO</div>
+  <div class="header-right">
+    <div class="date-pill" id="datePill">📅 —</div>
+    <button id="mainBtn" onclick="fetchContent()">⚡ Gerar Roteiros</button>
+  </div>
+</header>
+
+<div class="cat-bar" id="catBar">
+  <button class="cat-btn on" onclick="filter('all',this)">🌐 Todos</button>
+  <button class="cat-btn" onclick="filter('pokemon',this)">⚡ Pokémon</button>
+  <button class="cat-btn" onclick="filter('harrypotter',this)">🧙 Harry Potter</button>
+  <button class="cat-btn" onclick="filter('got',this)">🐉 Game of Thrones</button>
+  <button class="cat-btn" onclick="filter('games',this)">🎮 Games</button>
+  <button class="cat-btn" onclick="filter('anime',this)">⛩️ Anime</button>
+  <button class="cat-btn" onclick="filter('marvel',this)">🦸 Marvel</button>
+  <button class="cat-btn" onclick="filter('dc',this)">🦇 DC</button>
+  <button class="cat-btn" onclick="filter('series',this)">📺 Séries</button>
+</div>
+
+<main>
+  <div id="empty">
+    <div class="empty-ico">🎬</div>
+    <div class="empty-t">Pronto para criar conteúdo</div>
+    <div class="empty-s">Clique em <strong style="color:var(--accent)">⚡ Gerar Roteiros</strong> e receba roteiros completos de narração<br>com indicação de imagem para cada trecho do vídeo.</div>
+  </div>
+  <div id="loading">
+    <div class="spin"></div>
+    <div class="load-label">Gerando pautas e roteiros completos...</div>
+    <div class="load-step" id="lstep">Buscando notícias • Escrevendo roteiros • Indicando imagens</div>
+  </div>
+  <div id="grid"></div>
+</main>
+
+<div id="toast"></div>
+
+<script>
+// ── date ──
+const d = new Date();
+document.getElementById('datePill').textContent =
+  '📅 ' + d.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+
+let allItems = [];
+let activeFilter = 'all';
+
+const BANNER_COLORS = {
+  pokemon:'linear-gradient(90deg,#fbbf24,#f59e0b)',
+  harrypotter:'linear-gradient(90deg,#7c3aed,#4f46e5)',
+  got:'linear-gradient(90deg,#f43f5e,#7f1d1d)',
+  games:'linear-gradient(90deg,#22d3ee,#0891b2)',
+  anime:'linear-gradient(90deg,#ef4444,#b91c1c)',
+  marvel:'linear-gradient(90deg,#ef4444,#991b1b)',
+  dc:'linear-gradient(90deg,#3b82f6,#1d4ed8)',
+  tech:'linear-gradient(90deg,#10b981,#047857)',
+  series:'linear-gradient(90deg,#a855f7,#7e22ce)',
+};
+
+const TAG_LABELS = {
+  pokemon:'⚡ Pokémon', harrypotter:'🧙 Harry Potter', got:'🐉 Game of Thrones',
+  games:'🎮 Games', anime:'⛩️ Anime', marvel:'🦸 Marvel',
+  dc:'🦇 DC', tech:'💻 Tech', series:'📺 Séries',
+};
+
+// ── FETCH ──
+async function fetchContent() {
+  const btn = document.getElementById('mainBtn');
+  btn.disabled = true; btn.textContent = '⏳ Gerando...';
+  document.getElementById('empty').style.display = 'none';
+  document.getElementById('grid').innerHTML = '';
+  document.getElementById('loading').style.display = 'block';
+
+  const steps = [
+    'Buscando notícias • Selecionando pautas • Analisando tendências',
+    'Escrevendo roteiros de narração • Dividindo em cenas',
+    'Indicando imagens por cena • Montando pacote final...'
+  ];
+  let si = 0;
+  const stepTick = setInterval(() => {
+    si = (si+1) % steps.length;
+    document.getElementById('lstep').textContent = steps[si];
+  }, 2200);
+
+  const today = d.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+
+  const prompt = `Hoje é ${today}. Você é um roteirista especializado em canais nerd no YouTube Brasil.
+
+Gere 11 pautas de vídeo abrangendo os temas: Pokémon, Harry Potter, Game of Thrones / House of the Dragon, Games em geral, Anime, Marvel, DC, Séries.
+
+Para cada pauta, escreva um ROTEIRO COMPLETO DE NARRAÇÃO em português brasileiro, dividido em cenas. O apresentador NÃO vai aparecer — o vídeo será feito com imagens + voz sintética de IA. O texto deve soar natural quando narrado, com ritmo envolvente.
+
+Responda SOMENTE em JSON válido (sem markdown, sem blocos de código), neste formato exato:
+{
+  "videos": [
+    {
+      "id": 1,
+      "titulo": "título chamativo do vídeo",
+      "categoria": "pokemon|harrypotter|got|games|anime|marvel|dc|tech|series",
+      "viral": 8,
+      "duracao_estimada": "5-7 min",
+      "roteiro": [
+        {
+          "cena": "Abertura",
+          "tempo": "0:00 - 0:30",
+          "texto": "texto completo de narração desta cena, mínimo 4 frases envolventes",
+          "imagem_busca": "termos em inglês para buscar imagem no Google/Pinterest ex: 'Pikachu shocked expression 4k'",
+          "imagem_desc": "descrição em português do que deve aparecer na tela nesta cena"
+        },
+        {
+          "cena": "Desenvolvimento 1",
+          "tempo": "0:30 - 2:00",
+          "texto": "...",
+          "imagem_busca": "...",
+          "imagem_desc": "..."
+        },
+        {
+          "cena": "Desenvolvimento 2",
+          "tempo": "2:00 - 4:00",
+          "texto": "...",
+          "imagem_busca": "...",
+          "imagem_desc": "..."
+        },
+        {
+          "cena": "Clímax / Revelação",
+          "tempo": "4:00 - 5:30",
+          "texto": "...",
+          "imagem_busca": "...",
+          "imagem_desc": "..."
+        },
+        {
+          "cena": "Encerramento",
+          "tempo": "5:30 - 6:00",
+          "texto": "Se você curtiu esse vídeo, deixa o like e se inscreve no canal para não perder nenhum conteúdo. Até a próxima!",
+          "imagem_busca": "subscribe youtube button animated nerd",
+          "imagem_desc": "Tela de encerramento com chamada para inscrição"
+        }
+      ]
+    }
+  ]
+}
+
+Regras do roteiro:
+- Texto da narração deve ser corrido, sem marcações como [pausa] ou (som)
+- Linguagem informal e empolgante, como se fosse um amigo contando uma novidade
+- Cada cena com mínimo de 5-8 frases densas de conteúdo (exceto encerramento)
+- Use dados, curiosidades, comparações para enriquecer
+- Pokémon: focar em curiosidades, evoluções, jogos, anime
+- Harry Potter: focar em teorias, detalhes ocultos, spin-offs, Hogwarts Legacy
+- Game of Thrones/House of Dragon: focar em lore, personagens, teorias
+- Gere 2-3 vídeos de Pokémon, 2 de Harry Potter, 2 de GoT/HotD e os restantes distribuídos entre Games/Anime/Marvel/DC/Séries`;
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({
+        model:"claude-sonnet-4-6",
+        max_tokens:8000,
+        messages:[{role:"user",content:prompt}]
+      })
+    });
+    const data = await res.json();
+    clearInterval(stepTick);
+
+    const raw = data.content.filter(b=>b.type==='text').map(b=>b.text).join('');
+    let parsed;
+    try {
+      const clean = raw.replace(/```json|```/g,'').trim();
+      const m = clean.match(/\{[\s\S]*\}/);
+      parsed = JSON.parse(m ? m[0] : clean);
+    } catch(e) { throw new Error('Erro ao interpretar resposta da IA'); }
+
+    allItems = parsed.videos || [];
+    render(allItems);
+
+  } catch(err) {
+    clearInterval(stepTick);
+    document.getElementById('grid').innerHTML = `
+      <div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--red)">
+        <div style="font-size:36px;margin-bottom:12px">⚠️</div>
+        <div style="font-weight:700">${err.message}</div>
+      </div>`;
+  }
+
+  document.getElementById('loading').style.display = 'none';
+  btn.disabled = false; btn.textContent = '🔄 Gerar Novos';
+}
+
+// ── RENDER ──
+function render(items) {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  const list = activeFilter==='all' ? items : items.filter(i=>i.categoria===activeFilter);
+
+  if (!list.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted)">
+      <div style="font-size:36px;margin-bottom:12px">🔍</div>
+      <div>Nenhum vídeo nessa categoria hoje</div></div>`;
+    return;
+  }
+
+  list.forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.className = 'vcard';
+    card.style.animationDelay = (idx*0.07)+'s';
+
+    const banner = BANNER_COLORS[item.categoria] || 'linear-gradient(90deg,#6366f1,#8b5cf6)';
+    const tagClass = 'tag-'+(item.categoria||'series');
+    const tagLabel = TAG_LABELS[item.categoria] || item.categoria;
+    const viralColor = item.viral >= 9 ? '#f59e0b' : item.viral >= 7 ? '#10b981' : '#64748b';
+
+    // build script html
+    const roteiro = item.roteiro || [];
+    const scriptHTML = roteiro.map(c => `
+      <div class="script-block">
+        <div class="scene-label">🎬 ${c.cena} <span>${c.tempo || ''}</span></div>
+        <div class="scene-text">${c.texto}</div>
+        <div class="scene-img-hint">
+          <div class="ico">🖼️</div>
+          <div><strong style="color:#fbbf24;display:block;margin-bottom:2px">Imagem sugerida:</strong>${c.imagem_desc}</div>
+        </div>
+      </div>`).join('');
+
+    // build images html
+    const imagesHTML = roteiro.map((c,i) => {
+      const gq = encodeURIComponent(c.imagem_busca);
+      return `
+      <div class="img-query-item">
+        <div class="img-scene-tag">CENA ${i+1}</div>
+        <div class="img-query-body">
+          <div class="img-query-desc">🖼️ ${c.imagem_desc}</div>
+          <div class="img-search-btns">
+            <a class="img-src-btn btn-google" href="https://www.google.com/search?q=${gq}&tbm=isch&tbs=isz:l" target="_blank">🔍 Google Imagens</a>
+            <a class="img-src-btn btn-unsplash" href="https://unsplash.com/s/photos/${gq}" target="_blank">📷 Unsplash</a>
+            <a class="img-src-btn btn-pinterest" href="https://pinterest.com/search/pins/?q=${gq}" target="_blank">📌 Pinterest</a>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+
+    const fullScript = roteiro.map(c => `[${c.cena} — ${c.tempo}]\n${c.texto}`).join('\n\n');
+    const escapedScript = encodeURIComponent(fullScript);
+
+    card.innerHTML = `
+      <div class="card-banner" style="background:${banner}"></div>
+      <div class="card-head">
+        <div class="card-num">${String(idx+1).padStart(2,'0')}</div>
+        <div class="card-meta">
+          <div class="card-tags">
+            <span class="tag ${tagClass}">${tagLabel}</span>
+            <span class="viral-badge">🔥 ${item.viral}/10</span>
+            <span style="font-size:11px;color:var(--muted);padding:2px 0">⏱ ${item.duracao_estimada||'5-8 min'}</span>
+          </div>
+          <div class="card-title">${item.titulo}</div>
+        </div>
+      </div>
+      <div class="card-tabs">
+        <button class="tab-btn on" onclick="openTab(this,'script${item.id}','img${item.id}')">📝 Roteiro Completo</button>
+        <button class="tab-btn" onclick="openTab(this,'img${item.id}','script${item.id}')">🖼️ Guia de Imagens</button>
+      </div>
+      <div class="tab-panel on" id="script${item.id}">
+        ${scriptHTML}
+        <button class="copy-script-btn" id="copyBtn${item.id}" onclick="copyScript('${escapedScript}','copyBtn${item.id}')">
+          📋 Copiar Roteiro Completo para IA de Voz
+        </button>
+      </div>
+      <div class="tab-panel" id="img${item.id}">
+        <div class="img-query-list">${imagesHTML}</div>
+      </div>`;
+
+    grid.appendChild(card);
+  });
+}
+
+// ── TABS ──
+function openTab(btn, showId, hideId) {
+  document.getElementById(showId).classList.add('on');
+  document.getElementById(hideId).classList.remove('on');
+  const tabs = btn.closest('.card-tabs').querySelectorAll('.tab-btn');
+  tabs.forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+// ── FILTER ──
+function filter(cat, btn) {
+  activeFilter = cat;
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  render(allItems);
+}
+
+// ── COPY ──
+function copyScript(encoded, btnId) {
+  const text = decodeURIComponent(encoded);
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById(btnId);
+    btn.classList.add('copied');
+    btn.textContent = '✅ Copiado! Cole na IA de voz';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.textContent = '📋 Copiar Roteiro Completo para IA de Voz';
+    }, 2500);
+    toast('Roteiro copiado! Cole no ElevenLabs, Murf ou outra IA de voz 🎙️');
+  });
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'), 3000);
+}
+</script>
+</body>
+</html>
