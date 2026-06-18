@@ -177,9 +177,28 @@ body { background:var(--bg); color:var(--tx); font-family:'Inter',sans-serif; mi
     <button class="sbi" onclick="pg('estrategia',this)"><span style="font-size:16px;width:22px;text-align:center;display:inline-block">📈</span> Estrategia Viral</button>
   </div>
   <div class="sbf">
-    <button id="genBtn" onclick="gerarRoteiros()">⚡ Gerar Conteudo do Dia</button>
+    <button id="genBtn" onclick="abrirModalColar()">📋 Colar Roteiros do Claude</button>
   </div>
 </nav>
+
+<!-- MODAL: COLAR JSON -->
+<div id="pasteModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;align-items:center;justify-content:center;padding:20px">
+  <div style="background:var(--card);border:1px solid var(--b1);border-radius:14px;padding:22px;max-width:560px;width:100%;max-height:85vh;overflow-y:auto">
+    <div style="font-size:15px;font-weight:700;margin-bottom:6px">📋 Colar Roteiros do Claude</div>
+    <div style="font-size:12px;color:var(--m2);line-height:1.6;margin-bottom:14px">
+      Passo 1: copie o prompt abaixo e mande pra mim no chat normal do Claude.<br>
+      Passo 2: copie a resposta em JSON que eu te der.<br>
+      Passo 3: cole aqui embaixo e clique em Carregar.
+    </div>
+    <button class="cbtn" style="margin-top:0;margin-bottom:14px" onclick="copiarPromptModelo()">📋 Copiar Prompt Pronto pra Mandar ao Claude</button>
+    <textarea id="jsonInput" placeholder="Cole aqui o JSON que o Claude te enviou..." style="width:100%;min-height:160px;background:var(--s2);border:1px solid var(--b1);border-radius:9px;padding:12px;color:var(--tx);font-family:'JetBrains Mono',monospace;font-size:12px;resize:vertical;margin-bottom:12px"></textarea>
+    <div id="pasteError" style="display:none;color:var(--re);font-size:12px;margin-bottom:10px"></div>
+    <div style="display:flex;gap:8px">
+      <button class="cbtn" style="flex:1" onclick="carregarJson()">✅ Carregar Roteiros</button>
+      <button class="cbtn" style="flex:0 0 auto;background:var(--s2);color:var(--m1);border-color:var(--b1)" onclick="fecharModalColar()">Cancelar</button>
+    </div>
+  </div>
+</div>
 
 <div id="mn">
   <div id="tb">
@@ -208,15 +227,10 @@ body { background:var(--bg); color:var(--tx); font-family:'Inter',sans-serif; mi
         <button class="catbtn" onclick="filtrar('dc',this)">🦇 DC</button>
         <button class="catbtn" onclick="filtrar('series',this)">📺 Series</button>
       </div>
-      <div id="ld">
-        <div class="spin"></div>
-        <div style="font-size:14px;color:var(--m1)">Gerando roteiros com imagens copyright-free...</div>
-        <div style="font-size:11px;color:var(--m2);margin-top:6px;font-family:'JetBrains Mono',monospace" id="lstep">Selecionando pautas virais</div>
-      </div>
       <div id="empty" style="text-align:center;padding:80px 20px">
         <div style="font-size:52px;margin-bottom:16px">🎬</div>
-        <div style="font-size:18px;font-weight:700;margin-bottom:8px">Nenhum conteudo gerado ainda</div>
-        <div style="font-size:13px;color:var(--m2);line-height:1.7;max-width:420px;margin:0 auto">Clique em <strong style="color:var(--pu)">⚡ Gerar Conteudo do Dia</strong> no menu lateral para criar roteiros com narracoes prontas e guia de imagens seguras.</div>
+        <div style="font-size:18px;font-weight:700;margin-bottom:8px">Nenhum conteudo carregado ainda</div>
+        <div style="font-size:13px;color:var(--m2);line-height:1.7;max-width:420px;margin:0 auto">Clique em <strong style="color:var(--pu)">📋 Colar Roteiros do Claude</strong> no menu lateral, copie o prompt, mande pra mim no chat, e cole a resposta de volta aqui.</div>
       </div>
       <div id="gd"></div>
     </div>
@@ -425,25 +439,7 @@ function filtrar(cat, btn) {
   renderRoteiros(todosVideos);
 }
 
-async function gerarRoteiros() {
-  const btn = document.getElementById('genBtn');
-  btn.disabled = true; btn.textContent = '⏳ Gerando...';
-  pg('roteiros', document.querySelector('.sbi'));
-  document.getElementById('empty').style.display = 'none';
-  document.getElementById('gd').innerHTML = '';
-  document.getElementById('ld').style.display = 'block';
-
-  const steps = [
-    'Selecionando pautas virais e analisando tendencias',
-    'Escrevendo narracao cena a cena com linguagem natural',
-    'Mapeando imagens copyright-free e finalizando...'
-  ];
-  let si = 0;
-  const tick = setInterval(() => { si = (si + 1) % steps.length; document.getElementById('lstep').textContent = steps[si]; }, 2200);
-
-  const dh = hoje.toLocaleDateString('pt-BR', {weekday:'long', day:'2-digit', month:'long', year:'numeric'});
-
-  const prompt = `Hoje eh ${dh}. Voce eh um roteirista de canais nerd brasileiros para TikTok e YouTube Shorts.
+const PROMPT_MODELO = `Aja como um roteirista de canais nerd brasileiros para TikTok e YouTube Shorts. Considere a data de hoje.
 
 REGRAS OBRIGATORIAS:
 - Os videos usam IMAGENS + NARRACAO DE IA. Nenhum apresentador aparece na camera.
@@ -455,33 +451,56 @@ REGRAS OBRIGATORIAS:
 Gere 11 roteiros de video curto de aproximadamente 60 segundos sobre: Pokemon, Harry Potter, Game of Thrones e House of Dragon, Games, Anime, Marvel, DC, Series.
 Distribuicao obrigatoria: 3 Pokemon, 2 Harry Potter, 2 GoT ou HotD, 4 outros temas.
 
-Responda SOMENTE em JSON valido sem markdown ou backticks:
+Responda SOMENTE em JSON valido sem markdown ou backticks, dentro de um bloco de codigo, neste formato exato:
 {"videos":[{"id":1,"titulo":"titulo chamativo maximo 75 chars","categoria":"pokemon","viral":8,"duracao":"60 seg","cenas":[{"nome":"Abertura","tempo":"0:00-0:10","narracao":"texto natural minimo 4 frases empolgantes para narracao de IA","imagem_desc":"o que mostrar na tela em portugues","imagem_busca":"english search terms for unsplash pexels","imagem_fonte":"unsplash"},{"nome":"Desenvolvimento","tempo":"0:10-0:45","narracao":"desenvolvimento com dados e curiosidades minimo 6 frases naturais","imagem_desc":"o que mostrar","imagem_busca":"english terms","imagem_fonte":"pexels"},{"nome":"Revelacao","tempo":"0:45-0:55","narracao":"momento mais impactante e surpreendente 3-4 frases","imagem_desc":"o que mostrar","imagem_busca":"english terms","imagem_fonte":"ai-generated"},{"nome":"Encerramento","tempo":"0:55-1:00","narracao":"Se curtiu esse conteudo segue o canal que tem muito mais todo dia!","imagem_desc":"Tela escura com logo do canal centralizado","imagem_busca":"dark nerd gaming background abstract purple","imagem_fonte":"ai-generated"}]}]}`;
 
+function abrirModalColar() {
+  document.getElementById('pasteModal').style.display = 'flex';
+  document.getElementById('pasteError').style.display = 'none';
+}
+
+function fecharModalColar() {
+  document.getElementById('pasteModal').style.display = 'none';
+}
+
+function copiarPromptModelo() {
+  navigator.clipboard.writeText(PROMPT_MODELO).then(() => {
+    toast('Prompt copiado! Cole numa conversa com o Claude 🤖');
+  });
+}
+
+function carregarJson() {
+  const input = document.getElementById('jsonInput').value.trim();
+  const errBox = document.getElementById('pasteError');
+  errBox.style.display = 'none';
+
+  if (!input) {
+    errBox.textContent = 'Cole o JSON que o Claude te enviou antes de carregar.';
+    errBox.style.display = 'block';
+    return;
+  }
+
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({model:"claude-sonnet-4-6", max_tokens:8000, messages:[{role:"user", content:prompt}]})
-    });
-    const data = await res.json();
-    clearInterval(tick);
-    const raw = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
-    let parsed;
-    try {
-      const clean = raw.replace(/```json|```/g, '').trim();
-      const m = clean.match(/\{[\s\S]*\}/);
-      parsed = JSON.parse(m ? m[0] : clean);
-    } catch(e) { throw new Error('Erro ao processar resposta. Tente novamente.'); }
-    todosVideos = parsed.videos || [];
+    const clean = input.replace(/```json|```/g, '').trim();
+    const m = clean.match(/\{[\s\S]*\}/);
+    const parsed = JSON.parse(m ? m[0] : clean);
+    if (!parsed.videos || !Array.isArray(parsed.videos) || !parsed.videos.length) {
+      throw new Error('JSON nao contem a lista de videos esperada.');
+    }
+    todosVideos = parsed.videos;
+    pg('roteiros', document.querySelector('.sbi'));
+    filtroAtivo = 'all';
+    document.querySelectorAll('.catbtn').forEach(b => b.classList.remove('on'));
+    document.querySelector('.catbtn').classList.add('on');
     renderRoteiros(todosVideos);
     renderImgGuide(todosVideos);
-  } catch(err) {
-    clearInterval(tick);
-    document.getElementById('gd').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--re)"><div style="font-size:36px;margin-bottom:12px">⚠️</div><div style="font-weight:700">${err.message}</div></div>`;
+    fecharModalColar();
+    document.getElementById('jsonInput').value = '';
+    toast('Roteiros carregados com sucesso! 🎬');
+  } catch (e) {
+    errBox.textContent = 'Erro ao ler o JSON: ' + e.message + '. Confira se copiou a resposta completa do Claude.';
+    errBox.style.display = 'block';
   }
-  document.getElementById('ld').style.display = 'none';
-  btn.disabled = false; btn.textContent = '🔄 Gerar Novos';
 }
 
 function renderRoteiros(videos) {
