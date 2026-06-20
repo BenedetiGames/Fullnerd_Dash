@@ -403,6 +403,7 @@ const hoje = new Date();
 document.getElementById('datePill').textContent = '📅 ' + hoje.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'});
 
 let todosVideos = [], filtroAtivo = 'all';
+let NARRACOES = {};
 
 const BANNERS = {
   pokemon:'linear-gradient(90deg,#fbbf24,#f97316)',
@@ -488,6 +489,7 @@ function carregarJson() {
       throw new Error('JSON nao contem a lista de videos esperada.');
     }
     todosVideos = parsed.videos;
+    NARRACOES = {};
     pg('roteiros', document.querySelector('.sbi'));
     filtroAtivo = 'all';
     document.querySelectorAll('.catbtn').forEach(b => b.classList.remove('on'));
@@ -536,7 +538,7 @@ function renderRoteiros(videos) {
       </div>`).join('');
 
     const tf = (v.cenas || []).map(c => `[${c.nome} — ${c.tempo}]\n${c.narracao}`).join('\n\n');
-    const enc = encodeURIComponent(tf);
+    NARRACOES[v.id] = tf;
 
     const iH = (v.cenas || []).map((c, i) => {
       const q = encodeURIComponent(c.imagem_busca || '');
@@ -575,7 +577,7 @@ function renderRoteiros(videos) {
       </div>
       <div class="pan on" id="sc${v.id}">
         ${cH}
-        <button class="cbtn" id="cb${v.id}" onclick="copR('${enc}','cb${v.id}')">
+        <button class="cbtn" id="cb${v.id}" onclick="copR(${v.id},'cb${v.id}')">
           🎙️ Copiar Narracao Completa — Cole na IA de Voz
         </button>
       </div>
@@ -625,8 +627,9 @@ function abaCard(btn, s, h) {
   btn.classList.add('on');
 }
 
-function copR(enc, bId) {
-  navigator.clipboard.writeText(decodeURIComponent(enc)).then(() => {
+function copR(videoId, bId) {
+  const texto = NARRACOES[videoId] || '';
+  navigator.clipboard.writeText(texto).then(() => {
     const b = document.getElementById(bId);
     b.classList.add('ok'); b.textContent = '✅ Copiado! Cole no ElevenLabs, Murf ou Play.ht';
     setTimeout(() => { b.classList.remove('ok'); b.textContent = '🎙️ Copiar Narracao Completa — Cole na IA de Voz'; }, 2500);
